@@ -33,7 +33,8 @@
             "specialty": "Chuyên khoa",
             "manage-specialty": "Quản lý chuyên khoa",
             "handbook": "Cẩm nang",
-            "manage-handbook": "Quản lý cẩm nang"
+            "manage-handbook": "Quản lý cẩm nang",
+            "manage-wallet": "Quản lý ví"
         },
         "doctor": {
             "manage-schedule": "Quản lý kế hoạch khám bệnh",
@@ -53,7 +54,8 @@
         "role": "Vai trò",
         "image": "Ảnh đại diện",
         "save": "Lưu user",
-        "edit": "Lưu thay đổi"
+        "edit": "Lưu thay đổi",
+        "wallet": "Địa chỉ ví"
     },
     "homepage": {
         "outstanding-doctor": "Bác sĩ nổi bật tuần qua",

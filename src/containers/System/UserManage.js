@@ -6,6 +6,7 @@ import { getAllUsers, createNewUserService, deleteUserService, editUserService }
 import ModalUser from './ModalUser';
 import { emitter } from '../../utils/emitter'
 import ModalEditUser from './ModalEditUser';
+import { toast } from 'react-toastify';
 class UserManage extends Component {
 
     constructor(props) {
@@ -20,6 +21,12 @@ class UserManage extends Component {
 
     async componentDidMount() {
         await this.getAllUsersFromReact();
+    }
+
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+        // if (prevProps.userInfo !== this.props.userInfo) {
+        //     await this.getAllUsersFromReact();
+        // }
     }
 
     getAllUsersFromReact = async () => {
@@ -95,8 +102,9 @@ class UserManage extends Component {
                     isOpenModalEditUser: false
                 })
                 await this.getAllUsersFromReact()
+                toast.success('Update successfully')
             } else {
-                alert(res.errCode)
+                toast.error('Error')
             }
         } catch (error) {
             console.log(error)
@@ -166,6 +174,7 @@ class UserManage extends Component {
 
 const mapStateToProps = state => {
     return {
+        userInfo: state.user.userInfo
     };
 };
 

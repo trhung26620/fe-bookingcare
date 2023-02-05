@@ -43,6 +43,10 @@ class Login extends Component {
                 })
             }
             if (data && data.errCode === 0) {
+                localStorage.setItem("accessToken", data.user.accessToken);
+                let localUserData = JSON.parse(localStorage.getItem("persist:user"));
+                localUserData.isLoggedIn = "true";
+                localStorage.setItem("persist:user", JSON.stringify(localUserData));
                 this.props.userLoginSuccess(data.user)
             }
         } catch (error) {

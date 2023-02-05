@@ -9,6 +9,7 @@ import ManagePatient from '../containers/System/Doctor/ManagePatient';
 class Doctor extends Component {
     render() {
         const { systemMenuPath, isLoggedIn } = this.props;
+        console.log("=====Debug=====")
         return (
             <React.Fragment>
                 {isLoggedIn && <Header />}

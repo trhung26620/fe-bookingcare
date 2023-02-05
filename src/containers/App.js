@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter as Router } from 'connected-react-router';
 import { history } from '../redux'
 import { ToastContainer } from 'react-toastify';
-import { userIsAuthenticated, userIsNotAuthenticated } from '../hoc/authentication';
+import { userIsAuthenticated, UserIsNotAuthenticatedAndAdminRole, UserIsNotAuthenticatedAndDoctorRole } from '../hoc/authentication';
 import { path } from '../utils'
 import Home from '../routes/Home';
 // import Login from '../routes/Login';
@@ -20,8 +20,15 @@ import IntlProviderWrapper from "../hoc/IntlProviderWrapper";
 import VerifyEmail from './Patient/VerifyEmail';
 import DetailSpecialty from './Patient/Specialty/DetailSpecialty';
 import DetailClinic from './Patient/Clinic/DetailClinic';
+import Payment from './Patient/Payment';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            roleId: '',
+        }
+    }
 
     handlePersistorState = () => {
         const { persistor } = this.props;
@@ -41,7 +48,22 @@ class App extends Component {
         this.handlePersistorState();
     }
 
+    async componentDidUpdate(prevProps, preState, snapshot) {
+        if (this.props.isLoggedIn !== prevProps.isLoggedIn) {
+            if (this.props.isLoggedIn && this.props.userInfo && this.props.userInfo.roleId) {
+                this.setState({
+                    roleId: this.props.userInfo.roleId
+                })
+            } else if (!this.props.isLoggedIn) {
+                this.setState({
+                    roleId: ''
+                })
+            }
+        }
+    }
+
     render() {
+        let { roleId } = this.state
         return (
             // <IntlProviderWrapper>
             <Fragment>
@@ -51,8 +73,14 @@ class App extends Component {
                         <div className="content-container" style={{ height: '100vh', width: '100%' }}>
                             <CustomScrollbars>
                                 <Switch>
+                                    {/* {roleId && roleId === 'R1' && <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />} */}
+
                                     <Route path={path.HOME} exact component={Home} />
-                                    <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
+                                    {roleId === '' && <Route path={path.LOGIN} component={Login} />}
+                                    {/* <Route path={path.LOGIN} component={UserIsNotAuthenticatedAndAdminRole(Login)} /> */}
+                                    {roleId && roleId === 'R1' && <Route path={path.LOGIN} component={UserIsNotAuthenticatedAndAdminRole(Login)} />}
+                                    {roleId && roleId === 'R2' && <Route path={path.LOGIN} component={UserIsNotAuthenticatedAndDoctorRole(Login)} />}
+
                                     <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                                     <Route path={'/doctor'} component={userIsAuthenticated(Doctor)} />
                                     <Route path={path.HOMEPAGE} component={HomePage} />
@@ -60,6 +88,7 @@ class App extends Component {
                                     <Route path={path.DETAIL_SPECIALTY} component={DetailSpecialty} />
                                     <Route path={path.DETAIL_CLINIC} component={DetailClinic} />
                                     <Route path={path.VERIFY_EMAIL_BOOKING} component={VerifyEmail} />
+                                    <Route path={path.PAYMENT} component={Payment} />
                                 </Switch>
                             </CustomScrollbars>
                         </div>
@@ -93,7 +122,8 @@ class App extends Component {
 const mapStateToProps = state => {
     return {
         started: state.app.started,
-        isLoggedIn: state.user.isLoggedIn
+        isLoggedIn: state.user.isLoggedIn,
+        userInfo: state.user.userInfo
     };
 };
 

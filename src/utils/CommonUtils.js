@@ -7,6 +7,15 @@ class CommonUtils {
             reader.onerror = error => reject(error);
         });
     }
+
+    static getByteArray(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
 }
 
 export default CommonUtils;

@@ -1,23 +1,24 @@
 import axios from "../axios"
+import authHeader from './auth-header';
 
 const handleLoginApi = (userEmail, userPassword) => {
     return axios.post('/api/login', { email: userEmail, password: userPassword });
 }
 
 const getAllUsers = (inputId) => {
-    return axios.get(`/api/get-all-users?id=${inputId}`)
+    return axios.get(`/api/get-all-users?id=${inputId}`, { headers: authHeader() })
 }
 
 const createNewUserService = (data) => {
-    return axios.post('/api/create-new-user', data)
+    return axios.post('/api/create-new-user', data, { headers: authHeader() })
 }
 
 const deleteUserService = (userId) => {
-    return axios.delete('/api/delete-user', { data: { id: userId } });
+    return axios.delete('/api/delete-user', { data: { id: userId }, headers: authHeader() });
 }
 
 const editUserService = (inputData) => {
-    return axios.put('/api/edit-user', inputData);
+    return axios.put('/api/edit-user', inputData, { headers: authHeader() });
 }
 
 const getAllCodeService = (inputData) => {
@@ -29,11 +30,11 @@ const getTopDoctorHomeService = (limit) => {
 }
 
 const getAllDoctors = (limit) => {
-    return axios.get(`/api/get-all-doctors`);
+    return axios.get(`/api/get-all-doctors`, { headers: authHeader() });
 }
 
 const saveDetailDoctorService = (data) => {
-    return axios.post(`/api/save-infor-doctors`, data);
+    return axios.post(`/api/save-infor-doctors`, data, { headers: authHeader() });
 }
 
 const getDetailInforDoctor = (inputId) => {
@@ -41,7 +42,8 @@ const getDetailInforDoctor = (inputId) => {
 }
 
 const saveBulkScheduleDoctor = (data) => {
-    return axios.post(`/api/bulk-create-schedule`, data);
+    console.log("debuggggggggggg5")
+    return axios.post(`/api/bulk-create-schedule`, data, { headers: authHeader() });
 }
 
 const getScheduleDoctorByDate = (doctorId, date) => {
@@ -65,7 +67,7 @@ const postVerifyBookAppointment = (data) => {
 }
 
 const createNewSpecialty = (data) => {
-    return axios.post(`/api/create-new-specialty`, data);
+    return axios.post(`/api/create-new-specialty`, data, { headers: authHeader() });
 }
 
 const getAllSpecialty = () => {
@@ -75,7 +77,7 @@ const getDetailSpecialtyById = (data) => {
     return axios.get(`/api/get-detail-specialty-by-id?id=${data.id}&location=${data.location}`);
 }
 const createNewClinic = (data) => {
-    return axios.post(`/api/create-new-clinic`, data);
+    return axios.post(`/api/create-new-clinic`, data, { headers: authHeader() });
 }
 const getAllClinic = () => {
     return axios.get(`/api/get-clinic`);
@@ -84,10 +86,35 @@ const getDetailClinicById = (data) => {
     return axios.get(`/api/get-detail-clinic-by-id?id=${data.id}`);
 }
 const getAllPatientForDoctor = (data) => {
-    return axios.get(`/api/get-list-patient-for-doctor?doctorId=${data.doctorId}&date=${data.date}`);
+    return axios.get(`/api/get-list-patient-for-doctor?doctorId=${data.doctorId}&date=${data.date}`, { headers: authHeader() });
 }
 const postSendRemedy = (data) => {
-    return axios.post(`/api/send-remedy`, data);
+    // const formData = new FormData();
+    // for (let key in data) {
+    //     // console.log("🚀 ~ file: userService.js:94 ~ postSendRemedy ~ data.key", data[key])
+    //     formData.append(key, data[key]);
+    // }
+    // console.log("🚀 ~ file: userService.js:93 ~ postSendRemedy ~ formData", formData)
+
+    return axios.post(`/api/send-remedy`, data, { headers: authHeader() });
+}
+const getDoctorInfoById = (data) => {
+    return axios.get(`/api/get-doctor-info-by-id?doctorId=${data.doctorId}`, { headers: authHeader() });
+}
+const getDetailBillByToken = (data) => {
+    return axios.get(`/api/get-detail-bill?token=${data.token}`);
+}
+const getContractAbi = () => {
+    return axios.get(`/api/contract/abi`);
+}
+const transfer = (data) => {
+    return axios.post(`/api/transfer`, data);
+}
+const initBill = (data) => {
+    return axios.post(`/api/init-bill`, data);
+}
+const verifyPayment = (data) => {
+    return axios.post(`/api/verify-payment`, data);
 }
 export {
     handleLoginApi, getAllUsers, createNewUserService, deleteUserService,
@@ -96,5 +123,6 @@ export {
     getScheduleDoctorByDate, getExtraInforDoctorById, getProfileDoctorById,
     postPatientBookingAppointment, postVerifyBookAppointment, createNewSpecialty,
     getAllSpecialty, getDetailSpecialtyById, createNewClinic, getAllClinic,
-    getDetailClinicById, getAllPatientForDoctor, postSendRemedy
+    getDetailClinicById, getAllPatientForDoctor, postSendRemedy, getDoctorInfoById,
+    getDetailBillByToken, getContractAbi, transfer, initBill, verifyPayment
 };

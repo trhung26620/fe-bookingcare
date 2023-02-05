@@ -9,13 +9,14 @@ import DatePicker from '../../../components/Input/DatePicker';
 import moment from 'moment';
 import { toast } from "react-toastify";
 import _ from 'lodash';
-import { saveBulkScheduleDoctor } from '../../../services/userService'
+import { saveBulkScheduleDoctor, getDoctorInfoById } from '../../../services/userService'
 
 class ManageSchedule extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listDoctors: [],
+            // listDoctors: [],
+            doctor: [],
             selectedDoctor: {},
             currentDate: '',
             rangeTime: []
@@ -23,17 +24,26 @@ class ManageSchedule extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchAllDoctors();
+        // if(this.userInfo)
+        // await getDoctorInfoById()
+        // this.props.fetchAllDoctors();
         this.props.fetchAllScheduleTime();
+        let data = this.buildDataInputSelect();
+        if (data && data.length > 0) {
+            this.setState({
+                doctor: [...data],
+                selectedDoctor: data[0]
+            })
+        }
     }
 
     componentDidUpdate(prevProps, preState, snapshot) {
-        if (prevProps.allDoctors !== this.props.allDoctors) {
-            let dataSelect = this.buildDataInputSelect(this.props.allDoctors)
-            this.setState({
-                listDoctors: dataSelect
-            })
-        }
+        // if (prevProps.allDoctors !== this.props.allDoctors) {
+        //     let dataSelect = this.buildDataInputSelect(this.props.allDoctors)
+        //     this.setState({
+        //         doctor: dataSelect
+        //     })
+        // }
         if (prevProps.allScheduleTime !== this.props.allScheduleTime) {
             let data = this.props.allScheduleTime
             if (data && data.length > 0) {
@@ -50,23 +60,33 @@ class ManageSchedule extends Component {
         // if (prevProps.language !== this.props.language) {
         //     let dataSelect = this.buildDataInputSelect(this.props.allDoctors)
         //     this.setState({
-        //         listDoctors: dataSelect
+        //         doctor: dataSelect
         //     })
         // }
     }
 
-    buildDataInputSelect = (inputData) => {
+    buildDataInputSelect = () => {
         let result = [];
         let { language } = this.props;
-        if (inputData && inputData.length > 0) {
-            inputData.map((item, index) => {
-                let object = {};
-                let labelVi = `${item.lastName} ${item.firstName}`
-                let labelEn = `${item.firstName} ${item.lastName}`
-                object.label = language === LANGUAGES.VI ? labelVi : labelEn
-                object.value = item.id;
-                result.push(object)
-            })
+        // if (inputData && inputData.length > 0) {
+        //     inputData.map((item, index) => {
+        //         let object = {};
+        //         let labelVi = `${item.lastName} ${item.firstName}`
+        //         let labelEn = `${item.firstName} ${item.lastName}`
+        //         object.label = language === LANGUAGES.VI ? labelVi : labelEn
+        //         object.value = item.id;
+        //         result.push(object)
+        //     })
+        // }
+        if (this.props.userInfo) {
+            let item = this.props.userInfo;
+            let object = {};
+            let labelVi = `${item.lastName} ${item.firstName}`
+            let labelEn = `${item.firstName} ${item.lastName}`
+            object.label = language === LANGUAGES.VI ? labelVi : labelEn
+            object.value = item.id;
+            // object.isDisabled = true;
+            result.push(object)
         }
         return result
     }
@@ -113,7 +133,6 @@ class ManageSchedule extends Component {
             toast.error("Invalid date!");
             return;
         }
-        console.log("🚀 ~ file: ManageSchedule.js:110 ~ ManageSchedule ~ handleSaveSchedule= ~ formatedDate", formatedDate)
         if (rangeTime && rangeTime.length > 0) {
             let selectedTime = rangeTime.filter(item => item.isSelected === true);
             if (selectedTime && selectedTime.length > 0) {
@@ -130,23 +149,50 @@ class ManageSchedule extends Component {
                 return;
             }
         }
-        let res = await saveBulkScheduleDoctor({
-            arrSchedule: result,
-            doctorId: selectedDoctor.value,
-            formatedDate: formatedDate
-        })
-        if (res && res.errCode === 0) {
-            toast.success("Save Infor Succeed");
-        } else {
-            toast.error("error saveBulkScheduleDoctor");
-            console.log("🚀 ~ file: ManageSchedule.js:139 ~ ManageSchedule ~ handleSaveSchedule= ~ res", res)
+        let res = null;
+        try {
+            res = await saveBulkScheduleDoctor({
+                arrSchedule: result,
+                doctorId: selectedDoctor.value,
+                formatedDate: formatedDate.toString()
+            })
+            if (res && res.errCode === 0) {
+                toast.success("Save Infor Succeed");
+            } else if (res && res.errCode === 2) {
+                toast.error(res.errMessage);
+            } else {
+                toast.error("error saveBulkScheduleDoctor");
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 403) {
+                toast.error("Permission denied!");
+            } else {
+                toast.error("error saveBulkScheduleDoctor");
+            }
         }
+
+        // let res = new Promise(async (resolve, reject) => {
+        //     try {
+        //         let data = await saveBulkScheduleDoctor({
+        //             arrSchedule: result,
+        //             doctorId: selectedDoctor.value,
+        //             formatedDate: formatedDate.toString()
+        //         })
+        //         resolve(data)
+        //     } catch (error) {
+        //         reject(error)
+        //     }
+        // })
+        // res.then((data) => console.log(data));
+        // console.log("debuggggggggggg3")
+
 
     }
     render() {
         let { rangeTime } = this.state
         let { language } = this.props
         let yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
+        console.log("=====Debug22222222=====")
         return (
             <div className='manage-schedule-container'>
                 <div className='m-s-title'>
@@ -159,7 +205,9 @@ class ManageSchedule extends Component {
                             <Select
                                 value={this.state.selectedDoctor}
                                 onChange={this.handleChangeSelect}
-                                options={this.state.listDoctors}
+                                options={this.state.doctor}
+                            // isOptionDisabled={(option) => option.disabled}
+                            // isOptionDisabled={false}
                             />
                         </div>
                         <div className='col-6'>
@@ -201,15 +249,16 @@ class ManageSchedule extends Component {
 const mapStateToProps = state => {
     return {
         isLoggedIn: state.user.isLoggedIn,
-        allDoctors: state.admin.allDoctors,
+        // allDoctors: state.admin.allDoctors,
         language: state.app.language,
-        allScheduleTime: state.admin.allScheduleTime
+        allScheduleTime: state.admin.allScheduleTime,
+        userInfo: state.user.userInfo
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchAllDoctors: () => dispatch(actions.fetchAllDoctors()),
+        // fetchAllDoctors: () => dispatch(actions.fetchAllDoctors()),
         fetchAllScheduleTime: () => dispatch(actions.fetchAllScheduleTime())
     };
 };

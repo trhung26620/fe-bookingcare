@@ -33,7 +33,8 @@
             "specialty": "Specialties",
             "manage-specialty": "Manage specialties",
             "handbook": "Handbook",
-            "manage-handbook": "Manage handbook"
+            "manage-handbook": "Manage handbook",
+            "manage-wallet": "Manage wallet"
         },
         "doctor": {
             "manage-schedule": "Manage Doctor's schedule",
@@ -53,7 +54,8 @@
         "role": "Role",
         "image": "Avatar",
         "save": "Save user",
-        "edit": "Edit user"
+        "edit": "Edit user",
+        "wallet": "Wallet address"
     },
     "homepage": {
         "outstanding-doctor": "Last week's featured doctor",

@@ -21,27 +21,37 @@ class ManagePatient extends Component {
         }
     }
     async componentDidMount() {
+        // this.getDataPatient = await this.getDataPatient()
+        console.log("Debug2");
         this.getDataPatient()
     }
 
+
+
     getDataPatient = async () => {
         let { user } = this.props;
-        let { currentDate } = this.state;
-        let formatedDate = new Date(currentDate).getTime();
-        let res = await getAllPatientForDoctor({
-            doctorId: user.id,
-            date: formatedDate
-        })
-        if (res && res.errCode === 0) {
-            this.setState({
-                dataPatient: res.data
+        if (user) {
+            let { currentDate } = this.state;
+            let formatedDate = new Date(currentDate).getTime();
+            let res = await getAllPatientForDoctor({
+                doctorId: user.id,
+                date: formatedDate.toString()
             })
+            if (res && res.errCode === 0) {
+                this.setState({
+                    dataPatient: res.data
+                })
+            }
         }
     }
 
     async componentDidUpdate(prevProps, preState, snapshot) {
-        if (this.props.language !== prevProps.language) {
-
+        if (this.props.user !== prevProps.user) {
+            console.log("Debug3");
+            this.getDataPatient()
+        }
+        if (JSON.stringify(this.state.currentDate) !== JSON.stringify(preState.currentDate)) {
+            this.getDataPatient()
         }
     }
 
@@ -54,8 +64,6 @@ class ManagePatient extends Component {
     handleOnchangeDatePicker = (date) => {
         this.setState({
             currentDate: date[0]
-        }, async () => {
-            await this.getDataPatient()
         })
     }
     handleBtnConfirm = (item) => {

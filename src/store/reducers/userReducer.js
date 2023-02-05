@@ -20,6 +20,10 @@ const appReducer = (state = initialState, action) => {
                 userInfo: null
             }
         case actionTypes.PROCESS_LOGOUT:
+            localStorage.removeItem("accessToken");
+            let localUserData = JSON.parse(localStorage.getItem("persist:user"));
+            localUserData.isLoggedIn = false;
+            localStorage.setItem("persist:user", JSON.stringify(localUserData));
             return {
                 ...state,
                 isLoggedIn: false,

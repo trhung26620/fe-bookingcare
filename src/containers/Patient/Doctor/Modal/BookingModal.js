@@ -110,7 +110,7 @@ class BookingModal extends Component {
             address: this.state.address,
             reason: this.state.reason,
             date: this.props.dataTime.date,
-            birthday: date,
+            birthday: date.toString(),
             selectedGender: this.state.selectedGender.value,
             doctorId: this.state.doctorId,
             timeType: this.state.timeType,
@@ -125,6 +125,8 @@ class BookingModal extends Component {
         if (res && res.errCode === 0) {
             toast.success('Booking a new appointment succeed!');
             this.props.closeBookingModal();
+        } else if (res && res.errCode === 2) {
+            toast.warn(res.errMessage);
         } else {
             toast.error('Booking a new appointment error!');
         }

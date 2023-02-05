@@ -8,6 +8,7 @@ import "./UserRedux.scss"
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css'; // This only needs to be imported once in your app
 import TableManageUser from './TableManageUser';
+import { HighlightSpanKind } from 'typescript';
 
 class UserRedux extends Component {
 
@@ -30,7 +31,8 @@ class UserRedux extends Component {
             role: '',
             avatar: '',
             action: '',
-            userEditId: ''
+            userEditId: '',
+            walletAddress: ''
         }
     }
 
@@ -78,7 +80,8 @@ class UserRedux extends Component {
                 role: arrRoles && arrRoles.length > 0 ? arrRoles[0].keyMap : '',
                 avatar: '',
                 action: CRUD_ACTIONS.CREATE,
-                previewImageURL: ''
+                previewImageURL: '',
+                walletAddress: ''
             })
 
         }
@@ -120,7 +123,8 @@ class UserRedux extends Component {
                 gender: this.state.gender,
                 roleId: this.state.role,
                 positionId: this.state.position,
-                avatar: this.state.avatar
+                avatar: this.state.avatar,
+                walletAddress: this.state.walletAddress
             })
         }
         if (action === CRUD_ACTIONS.EDIT) {
@@ -135,7 +139,8 @@ class UserRedux extends Component {
                 gender: this.state.gender,
                 roleId: this.state.role,
                 positionId: this.state.position,
-                avatar: this.state.avatar
+                avatar: this.state.avatar,
+                walletAddress: this.state.walletAddress
             })
         }
 
@@ -143,7 +148,7 @@ class UserRedux extends Component {
 
     checkValidateInput = () => {
         let isValid = true;
-        let arrCheck = ['email', 'password', 'firstName', 'lastName', 'phoneNumber', 'address']
+        let arrCheck = ['email', 'password', 'firstName', 'lastName', 'phoneNumber', 'address', 'walletAddress']
         for (let i = 0; i < arrCheck.length; i++) {
             if (!this.state[arrCheck[i]]) {
                 isValid = false;
@@ -180,7 +185,8 @@ class UserRedux extends Component {
             avatar: '',
             previewImageURL: imageBase64,
             action: CRUD_ACTIONS.EDIT,
-            userEditId: user.id
+            userEditId: user.id,
+            walletAddress: user.walletAddress
         })
     }
     render() {
@@ -191,7 +197,7 @@ class UserRedux extends Component {
         let isGetGenders = this.props.isLoadingGender;
 
         let { email, password, firstName, lastName, phoneNumber, address, gender,
-            position, role, avatar } = this.state
+            position, role, avatar, walletAddress } = this.state
 
         return (
             <div className='user-redux-container'>
@@ -234,18 +240,25 @@ class UserRedux extends Component {
                                     onChange={(event) => { this.onChangeInput(event, 'lastName') }}
                                 ></input>
                             </div>
-                            <div className='col-3'>
+                            <div className='col-4'>
                                 <label><FormattedMessage id="manage-user.phone-number" /></label>
                                 <input className='form-control' type='text'
                                     value={phoneNumber}
                                     onChange={(event) => { this.onChangeInput(event, 'phoneNumber') }}
                                 ></input>
                             </div>
-                            <div className='col-9'>
+                            <div className='col-4'>
                                 <label><FormattedMessage id="manage-user.address" /></label>
                                 <input className='form-control' type='text'
                                     value={address}
                                     onChange={(event) => { this.onChangeInput(event, 'address') }}
+                                ></input>
+                            </div>
+                            <div className='col-4'>
+                                <label><FormattedMessage id="manage-user.wallet" /></label>
+                                <input className='form-control' type='text'
+                                    value={walletAddress}
+                                    onChange={(event) => { this.onChangeInput(event, 'walletAddress') }}
                                 ></input>
                             </div>
                             <div className='col-3'>
