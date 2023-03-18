@@ -293,10 +293,11 @@ class Payment extends Component {
     test = async () => {
         const { contract, web3 } = this.state.web3Api;
         const { account } = this.state
-        await contract.methods.registerAccountForDoctor('0x891B48a8CDF6E7A6402008322eFc17a21E55BF5C').send({
-            from: account
-        })
-
+        // await contract.methods.registerAccountForDoctor('0x025227a93c0E854dED1D5783Ad8934aeA9D11911').send({
+        //     from: account
+        // })
+        let data = await contract.methods.getBalanceByDoctorAccountDebug('0x025227a93c0E854dED1D5783Ad8934aeA9D11911').call()
+        console.log("🚀 ~ file: Payment.js:300 ~ Payment ~ test= ~ data", data)
         // await contract.methods.registerAccountForDoctor('0x891B48a8CDF6E7A6402008322eFc17a21E55BF5C').call()
     }
     render() {
