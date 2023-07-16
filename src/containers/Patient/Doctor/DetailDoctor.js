@@ -10,16 +10,53 @@ import DoctorExtraInfor from './DoctorExtraInfor';
 import Test from './Test';
 import LikeAndShare from '../SocialPlugin/LikeAndShare';
 import Comment from '../SocialPlugin/Comment';
+import LiveChat from '../../../components/LiveChat';
+import { io } from 'socket.io-client'
+import { format } from 'timeago.js'
 
 class DetailDoctor extends Component {
     constructor(props) {
         super(props);
         this.state = {
             detailDoctor: {},
-            currentDoctorId: -1
+            currentDoctorId: -1,
+            socket: io("ws://localhost:3001"),
+            messages: {},
+            doctorIsOnline: false,
         }
     }
+
+    sendMessage = async (message) => {
+        let { socket, detailDoctor } = this.state;
+        let data = {
+            messageText: message,
+            doctorId: detailDoctor?.id,
+        }
+        await socket.emit('sendMessage', data);
+        return true;
+    }
+
     async componentDidMount() {
+        console.log(this.state.messages)
+        let { socket } = this.state;
+        socket.emit('getAnonymousUser', +this.props.match.params.id);
+        socket.on('messageToClient', (message) => {
+            console.log(message)
+            this.setState({
+                messages: {
+                    content: message,
+                    owner: false,
+                    time: format(Date.now())
+                }
+            })
+        });
+        socket.on('isDoctorOnline', (doctorId) => {
+            if (doctorId === +this.props.match.params.id) {
+                this.setState({
+                    doctorIsOnline: true
+                })
+            }
+        })
         if (this.props.match && this.props.match.params && this.props.match.params.id) {
             let id = this.props.match.params.id
             this.setState({
@@ -37,10 +74,15 @@ class DetailDoctor extends Component {
     componentDidUpdate() {
 
     }
+
+    componentWillUnmount() {
+        let { socket } = this.state;
+        socket.close();
+    }
     render() {
 
         let { language } = this.props;
-        let { detailDoctor } = this.state;
+        let { detailDoctor, messages, doctorIsOnline } = this.state;
         let nameVi = '', nameEn = '';
         if (detailDoctor && detailDoctor.positionData) {
             nameVi = `${detailDoctor.positionData.valueVi}, ${detailDoctor.lastName} ${detailDoctor.firstName}`;
@@ -98,6 +140,14 @@ class DetailDoctor extends Component {
 
                     </div>
                 </div>
+                {doctorIsOnline &&
+                    <div className='live-chat-container'>
+                        <LiveChat
+                            messages={messages}
+                            sendMessage={this.sendMessage}
+                        />
+                    </div>
+                }
             </Fragment>
         );
     }

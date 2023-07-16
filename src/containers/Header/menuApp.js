@@ -64,6 +64,9 @@ export const doctorMenu = [
             },
             {
                 name: 'menu.admin.manage-wallet', link: '/system/manage-wallet'
+            },
+            {
+                name: 'menu.doctor.manage-live-chat', link: '/doctor/live-chat'
             }
         ]
     }

@@ -21,18 +21,6 @@ export const UserIsNotAuthenticatedAndAdminRole = connectedRouterRedirect({
     // Want to redirect the user when they are authenticated
     authenticatedSelector: state => !state.user.isLoggedIn,
     wrapperDisplayName: 'UserIsNotAuthenticatedAndAdminRole',
-    // redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/',
-    // redirectPath: (state, ownProps) => {
-    //     console.log("🚀 ~ file: authentication.js:18 ~ ownProps", ownProps)
-    //     console.log("🚀 ~ file: authentication.js:20 ~ state.user", state.user)
-
-    //     if (state.user.userInfor && state.user.userInfor.roleId) {
-    //         console.log("Debugggggggggg")
-    //         return state.user.userInfor.roleId === "R1" ? '/system/user-manage' : '/doctor/manage-schedule'
-    //     } else {
-    //         return '/login'
-    //     }
-    // },
     redirectPath: '/system/user-manage',
     allowRedirectBack: false
 });

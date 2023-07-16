@@ -21,6 +21,7 @@ import VerifyEmail from './Patient/VerifyEmail';
 import DetailSpecialty from './Patient/Specialty/DetailSpecialty';
 import DetailClinic from './Patient/Clinic/DetailClinic';
 import Payment from './Patient/Payment';
+import { HashRouter } from "react-router-dom";
 
 class App extends Component {
     constructor(props) {
@@ -33,6 +34,7 @@ class App extends Component {
     handlePersistorState = () => {
         const { persistor } = this.props;
         let { bootstrapped } = persistor.getState();
+        console.log("🚀 ~ file: App.js:36 ~ App ~ bootstrapped:", bootstrapped)
         if (bootstrapped) {
             if (this.props.onBeforeLift) {
                 Promise.resolve(this.props.onBeforeLift())
@@ -74,12 +76,13 @@ class App extends Component {
                             <CustomScrollbars>
                                 <Switch>
                                     {/* {roleId && roleId === 'R1' && <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />} */}
-
+                                    {/* <HashRouter> */}
                                     <Route path={path.HOME} exact component={Home} />
                                     {roleId === '' && <Route path={path.LOGIN} component={Login} />}
                                     {/* <Route path={path.LOGIN} component={UserIsNotAuthenticatedAndAdminRole(Login)} /> */}
                                     {roleId && roleId === 'R1' && <Route path={path.LOGIN} component={UserIsNotAuthenticatedAndAdminRole(Login)} />}
                                     {roleId && roleId === 'R2' && <Route path={path.LOGIN} component={UserIsNotAuthenticatedAndDoctorRole(Login)} />}
+                                    {/* </HashRouter> */}
 
                                     <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                                     <Route path={'/doctor'} component={userIsAuthenticated(Doctor)} />

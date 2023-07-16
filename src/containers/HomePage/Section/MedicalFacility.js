@@ -16,7 +16,6 @@ class MedicalFacility extends Component {
 
     async componentDidMount() {
         let res = await getAllClinic();
-        console.log("🚀 ~ file: MedicalFacility.js:18 ~ MedicalFacility ~ componentDidMount ~ res", res)
         if (res && res.errCode === 0) {
             this.setState({
                 dataClinics: res.data ? res.data : []

@@ -6,6 +6,7 @@ import './styles/styles.scss';
 import App from './containers/App';
 import * as serviceWorker from './serviceWorker';
 import IntlProviderWrapper from "./hoc/IntlProviderWrapper";
+import { HashRouter } from "react-router-dom";
 
 
 import { Provider } from 'react-redux';
@@ -15,7 +16,9 @@ const renderApp = () => {
     ReactDOM.render(
         <Provider store={reduxStore}>
             <IntlProviderWrapper>
-                <App persistor={persistor} />
+                {/* <HashRouter> */}
+                    <App persistor={persistor} />
+                {/* </HashRouter>, */}
             </IntlProviderWrapper>
         </Provider>,
         document.getElementById('root')

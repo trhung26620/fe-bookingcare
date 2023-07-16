@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+.chat-card-container {
+    // padding-top: 0 !important;
+    padding-bottom: 10px;
+
+    body {
+        background : #EEEEEE;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .messages-container {
+        height    : 400px;
+        overflow-y: auto;
+
+        .owner {
+            justify-content: right;
+        }
+    }
+
+    .card {
+        width           : 350px;
+        border          : none;
+        border-radius   : 15px;
+        box-shadow      : rgba(0, 0, 0, 0.2) 0px 0px 10px !important;
+        // height       : 500px;
+    }
+
+    .adiv {
+        background                : #04CB28;
+        border-radius             : 15px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius : 0;
+        font-size                 : 12px;
+        height                    : 46px;
+    }
+
+    .chat {
+        border       : none;
+        background   : #E2FFE8;
+        font-size    : 13px;
+        border-radius: 20px;
+    }
+
+    .bg-white {
+        border       : 1px solid #E7E7E9;
+        font-size    : 13px;
+        border-radius: 20px;
+    }
+
+    .myvideo img {
+        border-radius: 20px
+    }
+
+    .dot {
+        font-weight: bold;
+    }
+
+    .form-group {
+        position: relative;
+        height  : 140px;
+
+        .send-btn {
+            background-color   : #04cb28;
+            border             : none;
+            margin-top         : 6px;
+            border-radius      : 6px;
+            // width           : 10px;
+            width              : 80px;
+            height             : 30px;
+            position           : absolute;
+            right              : 20px;
+            bottom             : 0;
+            color              : white
+        }
+
+        .send-btn:hover {
+            background-color: #12b831;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border       : 1px solid #F0F0F0;
+            font-size    : 13px;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+        .form-control::placeholder {
+            font-size: 13px;
+            color    : #C4C4C4;
+        }
+
+        textarea {
+            font-size: 13px;
+            height   : 100px;
+        }
+    }
+}
